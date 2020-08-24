@@ -10,32 +10,32 @@ router.get('/todos', (req, res) => {
     })
 })
 router.get('/namesabc', (req, res) => {
-    db.all(`SELECT * FROM todos ORDER BY name LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+    db.all(`SELECT * FROM todos ORDER BY name COLLATE NOCASE LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
         res.send(results)
     })
 })
 router.get('/nameszyx', (req, res) => {
-    db.all(`SELECT * FROM todos ORDER BY name DESC LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+    db.all(`SELECT * FROM todos ORDER BY name COLLATE NOCASE DESC LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
         res.send(results)
     })
 })
 router.get('/emailabc', (req, res) => {
-    db.all(`SELECT * FROM todos ORDER BY email LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+    db.all(`SELECT * FROM todos ORDER BY email COLLATE NOCASE LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
         res.send(results)
     })
 })
 router.get('/emailzyx', (req, res) => {
-    db.all(`SELECT * FROM todos ORDER BY email DESC LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+    db.all(`SELECT * FROM todos ORDER BY email COLLATE NOCASE DESC LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
         res.send(results)
     })
 })
 router.get('/todosabc', (req, res) => {
-    db.all(`SELECT * FROM todos ORDER BY todo LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+    db.all(`SELECT * FROM todos ORDER BY todo COLLATE NOCASE LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
         res.send(results)
     })
 })
 router.get('/todoszyx', (req, res) => {
-    db.all(`SELECT * FROM todos ORDER BY todo DESC LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+    db.all(`SELECT * FROM todos ORDER BY todo COLLATE NOCASE DESC LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
         res.send(results)
     })
 })
