@@ -5,86 +5,95 @@ const router = express.Router()
 
 
 router.get('/todos', (req, res) => {
-    db.all(`SELECT * FROM todos`, (err, results) => {
+    db.all(`SELECT * FROM todos LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+        res.send(results)
+    })
+})
+router.get('/namesabc', (req, res) => {
+    db.all(`SELECT * FROM todos ORDER BY name LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+        res.send(results)
+    })
+})
+router.get('/nameszyx', (req, res) => {
+    db.all(`SELECT * FROM todos ORDER BY name DESC LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+        res.send(results)
+    })
+})
+router.get('/emailabc', (req, res) => {
+    db.all(`SELECT * FROM todos ORDER BY email LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+        res.send(results)
+    })
+})
+router.get('/emailzyx', (req, res) => {
+    db.all(`SELECT * FROM todos ORDER BY email DESC LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+        res.send(results)
+    })
+})
+router.get('/todosabc', (req, res) => {
+    db.all(`SELECT * FROM todos ORDER BY todo LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
+        res.send(results)
+    })
+})
+router.get('/todoszyx', (req, res) => {
+    db.all(`SELECT * FROM todos ORDER BY todo DESC LIMIT ? OFFSET ?`, [req.query.count, req.query.count * req.query.page], (err, results) => {
         res.send(results)
     })
 })
 router.get('/count', (req, res) => {
-    db.get(`SELECT count(*) as q from todos`, (err, results) => {
+    db.get(`SELECT COUNT(*) AS q FROM todos`, (err, results) => {
         res.send(results)
     })
 })
 router.post('/addtodo', async (req, res) => {
-    db.run(`INSERT INTO todos VALUES (
-     ${req.body.id},
-    '${req.body.name}',
-    '${req.body.email}',
-    '${req.body.todo}',
-     ${req.body.status},
-     ${req.body.changed}
-        )`, (err, results) => {
-        if (err) {
-            console.log(err.message)
-        }
-        res.send('New ToDo was successfully added!')
-    })
+    db.run(`INSERT INTO todos VALUES (?, ?, ?, ?, ?, ?)`,
+        [req.body.id,
+            req.body.name,
+            req.body.email,
+            req.body.todo,
+            req.body.status,
+            req.body.changed],
+        (err, results) => {
+            res.send('New ToDo was successfully added!')
+        })
 })
-
 router.delete('/delete/:id', (req, res) => {
-    db.run(`DELETE FROM todos WHERE id = ${req.params.id}`, (err, results) => {
+    db.run(`DELETE FROM todos WHERE id = ?`, [req.params.id], (err, results) => {
         res.send('ToDo was successfully deleted!')
     })
 })
-
 router.post('/createauth', async (req, res) => {
-    db.run(`INSERT INTO auth VALUES (
-     ${req.body.id},
-    '${req.body.name}',
-    '${req.body.email}',
-        )`, (err, results) => {
-        if (err) {
-            console.log(err.message)
-        }
+    db.run(`INSERT INTO auth VALUES (?, ?, ?)`, [
+        req.body.id,
+        req.body.name,
+        req.body.email
+    ], (err, results) => {
         res.send('Autorisation success!')
     })
 })
 router.post('/auth', async (req, res) => {
-    console.log(req.body)
-    db.get(`SELECT * FROM auth WHERE login LIKE '${req.body.login}' AND password LIKE '${req.body.password}'`, (err, results) => {
-        if (err) {
-            console.log(err.message)
-        }
+    db.get(`SELECT * FROM auth WHERE login LIKE ? AND password LIKE ?`, [req.body.login, req.body.password], (err, results) => {
         res.send(results)
     })
 })
-router.get('/getauth', (req, res) => {
-    db.get(`SELECT auth FROM auth`, (err, results) => {
-        res.send(results)
-        console.log(results)
-    })
+router.get('/getauth/:id', (req, res) => {
+        db.get(`SELECT auth FROM auth WHERE id = ?`, [req.params.id], (err, results) => {
+            res.send(results)
+        })
 })
 router.post('/authstatus', async (req, res) => {
-    db.run(`UPDATE auth SET auth = ${req.body.auth} WHERE id = 1`, (err, results) => {
-        if (err) {
-            console.log(err.message)
-        }
+    db.run(`UPDATE auth SET auth = ? WHERE id = ?`, [req.body.auth, req.body.id], (err, results) => {
         res.send('Success')
     })
 })
-
 router.post('/updatestatus', async (req, res) => {
-    db.run(`UPDATE todos SET status = ${req.body.status} WHERE id = ${req.body.id}`, (err, results) => {
-        if (err) {
-            console.log(err.message)
-        }
+    db.run(`UPDATE todos SET status = ? WHERE id = ?`, [req.body.status, req.body.id], (err, results) => {
         res.send('Success')
     })
 })
 router.post('/changed', async (req, res) => {
-        db.run(`UPDATE todos SET todo = '${req.body.todo}', changed = ${req.body.changed} WHERE id = ${req.body.id}`, (err, results) => {
-            if (err) {
-                console.log(err.message)
-            }
+    db.run(`UPDATE todos SET todo = ?, changed = ? WHERE id = ?`,
+        [req.body.todo, req.body.changed, req.body.id],
+        (err, results) => {
             res.send('Success')
         })
 })
